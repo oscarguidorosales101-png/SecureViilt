@@ -1,0 +1,250 @@
+/* Estilos para Perfil y Bóveda de Secretos estilo Claspt */
+.profileContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.pageHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pageTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pageSubtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Tarjeta de Información de Usuario */
+.identityCard {
+  background-color: #141b2a;
+  border: 1px solid #1f293e;
+  border-radius: var(--radius-md);
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.identityInfo {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.avatarLarge {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #1f2a3f;
+  color: var(--accent-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  font-weight: 700;
+  border: 2px solid #2a3753;
+}
+
+.userEmailTitle {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.userRoleMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+/* Sección de Secretos estilo Claspt (Attachment 3) */
+.secretsVaultCard {
+  background-color: #111724;
+  border: 1px solid #1d273c;
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.vaultHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vaultTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #60a5fa;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lockAllBtn {
+  background-color: #1a2336;
+  border: 1px solid #283754;
+  color: #f87171;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.lockAllBtn:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+.secretsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Barra individual de Secreto estilo Claspt */
+.secretItemBar {
+  background-color: #0c111c;
+  border: 1px solid #1c263c;
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all var(--transition-fast);
+}
+
+.secretItemBar:hover {
+  border-color: #2b3954;
+}
+
+.secretLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.secretIcon {
+  color: #60a5fa;
+  flex-shrink: 0;
+}
+
+.secretName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.secretValue {
+  font-size: 0.85rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #94a3b8;
+  margin-top: 0.15rem;
+}
+
+.secretValueRevealed {
+  color: #34d399;
+  font-weight: 500;
+}
+
+.revealPillBtn {
+  background-color: #141b2a;
+  border: 1px solid #243048;
+  color: #8da4c4;
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.revealPillBtn:hover {
+  background-color: #1f2b42;
+  color: #ffffff;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+}
+
+/* Formulario para Actualizar Datos Sensibles */
+.editSensitiveFormCard {
+  background-color: #141b2a;
+  border: 1px solid #1f293e;
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+}
+
+.formTitle {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.35rem;
+}
+
+.formSubtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.submitSensitiveBtn {
+  background-color: var(--accent-blue);
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-top: 1rem;
+}
+
+.submitSensitiveBtn:hover:not(:disabled) {
+  background-color: var(--accent-blue-hover);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
+}
+
+.submitSensitiveBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

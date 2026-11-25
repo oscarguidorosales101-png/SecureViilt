@@ -1,0 +1,276 @@
+.adminContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.pageHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pageTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pageSubtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* 4 Tarjetas de Métricas estilo Clouisle (Attachment 4) */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.metricCard {
+  background-color: #141b2a;
+  border: 1px solid #1f283d;
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+}
+
+.metricCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.metricTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.metricIcon {
+  color: var(--text-muted);
+}
+
+.metricValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+  margin-top: 0.75rem;
+}
+
+.metricSubtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+}
+
+/* Tabs de navegación interna */
+.tabsContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid #1c263c;
+  padding-bottom: 0.5rem;
+}
+
+.tabBtn {
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tabBtn:hover {
+  background-color: #141c2c;
+  color: #ffffff;
+}
+
+.tabBtnActive {
+  background-color: #172236;
+  color: #ffffff;
+  border: 1px solid #283754;
+}
+
+/* Barra de Filtros estilo Clouisle */
+.filterBar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background-color: #141b2a;
+  border: 1px solid #1f293e;
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+}
+
+.searchBox {
+  position: relative;
+  flex: 1;
+  min-width: 260px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+
+.searchInput {
+  background-color: #0b101b;
+  border: 1px solid #222e47;
+  color: #ffffff;
+  padding: 0.55rem 1rem 0.55rem 2.25rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  width: 100%;
+}
+
+.selectDropdown {
+  background-color: #0b101b;
+  border: 1px solid #222e47;
+  color: #ffffff;
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  cursor: pointer;
+  min-width: 160px;
+}
+
+/* Tabla de Datos estilo Clouisle */
+.tableCard {
+  background-color: #141b2a;
+  border: 1px solid #1f293e;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.dataTable th {
+  background-color: #0d1320;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid #1c263c;
+}
+
+.dataTable td {
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid #172033;
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.dataTable tr:hover td {
+  background-color: #172033;
+}
+
+.timeCell {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.userCell {
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.ipCell {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: #8da4c4;
+}
+
+/* Paginación */
+.paginationRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background-color: #0d1320;
+  border-top: 1px solid #1c263c;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.paginationControls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pageBtn {
+  background-color: #141c2c;
+  border: 1px solid #23304a;
+  color: #ffffff;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all var(--transition-fast);
+}
+
+.pageBtn:hover:not(:disabled) {
+  background-color: #1d2a44;
+}
+
+.pageBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.toggleStatusBtn {
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btnDeactivate {
+  background-color: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+.btnDeactivate:hover:not(:disabled) {
+  background-color: rgba(239, 68, 68, 0.25);
+}
+
+.btnActivate {
+  background-color: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+}
+
+.btnActivate:hover:not(:disabled) {
+  background-color: rgba(16, 185, 129, 0.25);
+}

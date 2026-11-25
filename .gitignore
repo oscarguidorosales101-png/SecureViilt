@@ -1,42 +1,71 @@
-# Logs
-logs
-*.log
+# ==============================================================================
+# SECUREVAULT - REGLAS GLOBALES DE EXCLUSIÓN GIT (.gitignore)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# SECRETOS Y CREDENCIALES (PROTECCIÓN CRÍTICA - OWASP A02)
+# ------------------------------------------------------------------------------
+.env
+.env.*
+*.env
+!.env.example
+*.pem
+*.key
+*.cert
+*.crt
+mcp_config.json
+*mcp_config*.json
+
+# ------------------------------------------------------------------------------
+# DEPENDENCIAS Y PAQUETES
+# ------------------------------------------------------------------------------
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Node modules
-node_modules
-dist
-dist-ssr
+# ------------------------------------------------------------------------------
+# COMPILADOS Y SALIDAS DE BUILD
+# ------------------------------------------------------------------------------
+dist/
+dist-ssr/
+build/
 *.local
+.vite/
+.vercel/
 
-# Environment and secrets (CRITICAL)
-.env
-.env.*
-!.env.example
-*.pem
-*.key
-*.cert
-*.crt
+# ------------------------------------------------------------------------------
+# REGISTROS Y OBSERVABILIDAD
+# ------------------------------------------------------------------------------
+logs/
+*.log
 
-# Testing and coverage
-coverage
-.nyc_output
+# ------------------------------------------------------------------------------
+# PRUEBAS Y COBERTURA DE CÓDIGO
+# ------------------------------------------------------------------------------
+coverage/
+.nyc_output/
 
-# Editor directories and OS files
+# ------------------------------------------------------------------------------
+# ARTIFACTOS TEMPORALES DE PRISMA / BASE DE DATOS
+# ------------------------------------------------------------------------------
+prisma/migrations/.dev.db*
+*.db
+*.sqlite
+
+# ------------------------------------------------------------------------------
+# CONFIGURACIONES DE EDITORES Y SISTEMAS OPERATIVOS
+# ------------------------------------------------------------------------------
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
-Thumbs.db
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-
-# Prisma generated artifacts
-prisma/migrations/.dev.db*
+.DS_Store
+Thumbs.db
+desktop.ini

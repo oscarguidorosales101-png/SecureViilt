@@ -1,0 +1,20 @@
+// ==============================================================================
+// SECUREVAULT - COMPONENTE RAÍZ DE LA APLICACIÓN
+// ==============================================================================
+
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { AppRoutes } from './routes/AppRoutes';
+
+export function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}
+
+export default App;
