@@ -29,7 +29,6 @@ export const AdminDashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
   const [logs, setLogs] = useState([]);
-  const [pagination, setPagination] = useState({ page: 1, limit: 50, total: 0, pages: 1 });
 
   // Filtros
   const [searchTerm, setSearchTerm] = useState('');
@@ -42,7 +41,7 @@ export const AdminDashboardPage = () => {
   const loadUsers = useCallback(async () => {
     try {
       const data = await adminService.getUsers();
-      setUsers(data.users || []);
+      setUsers(data?.users || (Array.isArray(data) ? data : []));
     } catch (err) {
       console.error('Error loading users:', err);
     }
@@ -51,12 +50,12 @@ export const AdminDashboardPage = () => {
   // Cargar registros de auditoría
   const loadLogs = useCallback(async () => {
     try {
-      const params = { page, limit: 50 };
+      const params = { skip: (page - 1) * 50, take: 50 };
       if (statusFilter !== 'ALL') params.status = statusFilter;
-      if (actionFilter !== 'ALL') params.action = actionFilter;
+      if (actionFilter !== 'ALL') params.eventType = actionFilter;
       const data = await adminService.getAuditLogs(params);
-      setLogs(data.logs || []);
-      setPagination(data.pagination || { page: 1, limit: 50, total: 0, pages: 1 });
+      const list = data?.logs || (Array.isArray(data) ? data : []);
+      setLogs(list);
     } catch (err) {
       console.error('Error loading audit logs:', err);
     }
@@ -75,7 +74,7 @@ export const AdminDashboardPage = () => {
 
   // Manejo de activación / desactivación de usuario
   const handleToggleUserStatus = async (user) => {
-    if (user.id === currentAdmin.id) {
+    if (currentAdmin && user.id === currentAdmin.id) {
       alert('Por seguridad no puedes desactivar tu propia cuenta administradora.');
       return;
     }
@@ -101,16 +100,10 @@ export const AdminDashboardPage = () => {
 
   // Cálculo de Métricas (Attachment 4 Clouisle style)
   const metrics = useMemo(() => {
-    const totalLogs = pagination.total || logs.length;
-
-    // Calcular logs de hoy
+    const totalLogs = logs.length;
     const today = new Date().toISOString().slice(0, 10);
     const todayLogsCount = logs.filter((l) => l.createdAt?.slice(0, 10) === today).length;
-
-    // Operaciones fallidas o bloqueadas
     const failedOpsCount = logs.filter((l) => l.status === 'FAILURE' || l.status === 'BLOCKED').length;
-
-    // Usuarios activos
     const activeUsersCount = users.filter((u) => u.isActive).length;
 
     return {
@@ -119,19 +112,24 @@ export const AdminDashboardPage = () => {
       failedOps: failedOpsCount,
       activeUsers: activeUsersCount,
     };
-  }, [pagination.total, logs, users]);
+  }, [logs, users]);
 
   // Filtro de búsqueda en memoria para la tabla de logs
   const filteredLogs = useMemo(() => {
     if (!searchTerm.trim()) return logs;
     const term = searchTerm.toLowerCase();
-    return logs.filter(
-      (log) =>
-        (log.userEmail && log.userEmail.toLowerCase().includes(term)) ||
-        (log.action && log.action.toLowerCase().includes(term)) ||
-        (log.ipAddress && log.ipAddress.toLowerCase().includes(term)) ||
-        (log.resourceType && log.resourceType.toLowerCase().includes(term))
-    );
+    return logs.filter((log) => {
+      const email = log.user?.email || log.details?.email || '';
+      const event = log.eventType || '';
+      const ip = log.ipAddress || '';
+      const status = log.status || '';
+      return (
+        email.toLowerCase().includes(term) ||
+        event.toLowerCase().includes(term) ||
+        ip.toLowerCase().includes(term) ||
+        status.toLowerCase().includes(term)
+      );
+    });
   }, [logs, searchTerm]);
 
   // Formato de fecha
@@ -154,23 +152,30 @@ export const AdminDashboardPage = () => {
     return <span className="badge badge-blue">{status}</span>;
   };
 
-  const getOperationBadge = (action) => {
-    if (action.includes('LOGIN') || action.includes('AUTH') || action.includes('LOGOUT')) {
+  const getOperationBadge = (eventType = '') => {
+    if (eventType.includes('LOGIN') || eventType.includes('AUTH') || eventType.includes('LOGOUT')) {
       return <span className="badge badge-blue">Auth</span>;
     }
-    if (action.includes('CREATE') || action.includes('REGISTER')) {
+    if (eventType.includes('CREATE') || eventType.includes('REGISTER')) {
       return <span className="badge badge-emerald">Create</span>;
     }
-    if (action.includes('UPDATE') || action.includes('STATUS')) {
+    if (eventType.includes('UPDATE') || eventType.includes('STATUS')) {
       return <span className="badge badge-amber">Update</span>;
     }
-    if (action.includes('DELETE')) {
+    if (eventType.includes('DELETE')) {
       return <span className="badge badge-rose">Delete</span>;
     }
-    if (action.includes('REVEAL')) {
+    if (eventType.includes('REVEAL')) {
       return <span className="badge badge-purple">Reveal</span>;
     }
     return <span className="badge badge-blue">System</span>;
+  };
+
+  const getResourceType = (log) => {
+    if (log.details?.noteId || log.eventType?.includes('NOTE')) return 'note';
+    if (log.details?.targetUserId || log.eventType?.includes('USER')) return 'user';
+    if (log.eventType?.includes('SENSITIVE')) return 'sensitive_data';
+    return 'security';
   };
 
   return (
@@ -264,7 +269,7 @@ export const AdminDashboardPage = () => {
           onClick={() => setActiveTab('logs')}
         >
           <Activity size={16} />
-          <span>Audit Logs ({pagination.total})</span>
+          <span>Audit Logs ({logs.length})</span>
         </button>
 
         <button
@@ -318,12 +323,12 @@ export const AdminDashboardPage = () => {
               >
                 <option value="ALL">Filter by Action: All</option>
                 <option value="USER_LOGIN">USER_LOGIN</option>
-                <option value="USER_REGISTER">USER_REGISTER</option>
-                <option value="NOTE_CREATE">NOTE_CREATE</option>
-                <option value="NOTE_UPDATE">NOTE_UPDATE</option>
-                <option value="NOTE_DELETE">NOTE_DELETE</option>
-                <option value="SENSITIVE_DATA_REVEAL">SENSITIVE_DATA_REVEAL</option>
-                <option value="USER_STATUS_UPDATE">USER_STATUS_UPDATE</option>
+                <option value="REGISTRATION_SUCCESS">REGISTRATION_SUCCESS</option>
+                <option value="NOTE_CREATED">NOTE_CREATED</option>
+                <option value="NOTE_UPDATED">NOTE_UPDATED</option>
+                <option value="NOTE_DELETED">NOTE_DELETED</option>
+                <option value="SENSITIVE_DATA_REVEALED">SENSITIVE_DATA_REVEALED</option>
+                <option value="ADMIN_USER_STATUS_UPDATED">ADMIN_USER_STATUS_UPDATED</option>
               </select>
             </div>
           </div>
@@ -353,19 +358,25 @@ export const AdminDashboardPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredLogs.map((log) => (
-                    <tr key={log.id}>
-                      <td className={styles.timeCell}>{formatDateTime(log.createdAt)}</td>
-                      <td className={styles.userCell}>{log.userEmail || 'Anon / System'}</td>
-                      <td>{log.action}</td>
-                      <td>
-                        <code style={{ fontSize: '0.8rem', color: '#93c5fd' }}>{log.resourceType || 'system'}</code>
-                      </td>
-                      <td className={styles.ipCell}>{log.ipAddress || '127.0.0.1'}</td>
-                      <td>{getOperationBadge(log.action)}</td>
-                      <td>{getStatusBadge(log.status)}</td>
-                    </tr>
-                  ))}
+                  {filteredLogs.map((log) => {
+                    const userEmail = log.user?.email || log.details?.email || 'Anon / System';
+                    const eventName = log.eventType || 'SYSTEM_EVENT';
+                    const resType = getResourceType(log);
+
+                    return (
+                      <tr key={log.id}>
+                        <td className={styles.timeCell}>{formatDateTime(log.createdAt)}</td>
+                        <td className={styles.userCell}>{userEmail}</td>
+                        <td>{eventName}</td>
+                        <td>
+                          <code style={{ fontSize: '0.8rem', color: '#93c5fd' }}>{resType}</code>
+                        </td>
+                        <td className={styles.ipCell}>{log.ipAddress || '127.0.0.1'}</td>
+                        <td>{getOperationBadge(eventName)}</td>
+                        <td>{getStatusBadge(log.status)}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             )}
@@ -373,7 +384,7 @@ export const AdminDashboardPage = () => {
             {/* Paginación */}
             <div className={styles.paginationRow}>
               <span>
-                Página {pagination.page} de {pagination.pages || 1} (Total: {pagination.total} registros)
+                Mostrando {filteredLogs.length} registros
               </span>
               <div className={styles.paginationControls}>
                 <button
@@ -385,7 +396,7 @@ export const AdminDashboardPage = () => {
                 </button>
                 <button
                   className={styles.pageBtn}
-                  disabled={page >= pagination.pages}
+                  disabled={filteredLogs.length < 50}
                   onClick={() => setPage((p) => p + 1)}
                 >
                   Siguiente <ChevronRight size={14} style={{ display: 'inline', verticalAlign: 'middle' }} />
@@ -413,8 +424,9 @@ export const AdminDashboardPage = () => {
             </thead>
             <tbody>
               {users.map((u) => {
-                const isSelf = u.id === currentAdmin.id;
-                const isLocked = u.lockoutUntil && new Date(u.lockoutUntil) > new Date();
+                const isSelf = currentAdmin && u.id === currentAdmin.id;
+                const lockTimestamp = u.lockedUntil || u.lockoutUntil;
+                const isLocked = lockTimestamp && new Date(lockTimestamp) > new Date();
 
                 return (
                   <tr key={u.id}>
@@ -441,7 +453,7 @@ export const AdminDashboardPage = () => {
                     <td>
                       {isLocked ? (
                         <span className="badge badge-rose">
-                          Bloqueado hasta {new Date(u.lockoutUntil).toLocaleTimeString()}
+                          Bloqueado hasta {new Date(lockTimestamp).toLocaleTimeString()}
                         </span>
                       ) : (
                         <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Ninguno</span>

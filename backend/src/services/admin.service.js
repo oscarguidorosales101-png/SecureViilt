@@ -63,8 +63,8 @@ export const adminService = {
   /**
    * Consulta la bitácora de eventos de seguridad forense con filtros.
    */
-  async listAuditLogs({ skip = 0, take = 50, eventType = null }) {
-    const logs = await auditRepository.listLogs({ skip, take, eventType });
+  async listAuditLogs({ skip = 0, take = 50, eventType = null, status = null }) {
+    const logs = await auditRepository.listLogs({ skip, take, eventType, status });
     return logs;
   },
 };

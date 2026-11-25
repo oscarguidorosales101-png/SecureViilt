@@ -5,7 +5,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   withCredentials: true, // Envía cookies de sesión HTTP-only automáticamente
   headers: {
     'Content-Type': 'application/json',

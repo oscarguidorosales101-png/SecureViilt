@@ -5,13 +5,19 @@ import { PrismaClient } from '@prisma/client';
 
 const { Pool } = pg;
 
-const connectionString = process.env.DATABASE_URL;
+const isTest = process.env.NODE_ENV === 'test';
+const connectionString = (isTest && process.env.DATABASE_URL_LOCAL)
+  ? process.env.DATABASE_URL_LOCAL
+  : process.env.DATABASE_URL;
+
+const isRemote = connectionString && (connectionString.includes('supabase.com') || connectionString.includes('pooler.supabase.com') || connectionString.includes('sslmode=require'));
 
 export const pool = new Pool({
   connectionString,
-  max: 10,
+  max: 20,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
+  connectionTimeoutMillis: 15000,
+  ssl: isRemote ? { rejectUnauthorized: false } : undefined,
 });
 
 const adapter = new PrismaPg(pool);

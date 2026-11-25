@@ -4,6 +4,7 @@
 
 import { userRepository } from '../repositories/user.repository.js';
 import { auditRepository } from '../repositories/audit.repository.js';
+import { mailService } from './mail.service.js';
 import { hashPassword, verifyPassword, dummyVerify } from '../security/argon2.js';
 
 export class AuthError extends Error {
@@ -49,6 +50,14 @@ export const authService = {
       ipAddress,
       userAgent,
       status: 'SUCCESS',
+    });
+
+    // Envío asíncrono del correo de bienvenida
+    mailService.sendWelcomeEmail({
+      toEmail: newUser.email,
+      name: newUser.name,
+    }).catch((err) => {
+      console.error('Error enviando correo de bienvenida:', err.message);
     });
 
     return newUser;

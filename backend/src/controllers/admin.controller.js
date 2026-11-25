@@ -56,8 +56,9 @@ export const adminController = {
       const skip = req.query.skip ? Number(req.query.skip) : 0;
       const take = req.query.take ? Number(req.query.take) : 50;
       const eventType = req.query.eventType || null;
+      const status = req.query.status || null;
 
-      const logs = await adminService.listAuditLogs({ skip, take, eventType });
+      const logs = await adminService.listAuditLogs({ skip, take, eventType, status });
 
       return res.status(200).json({
         success: true,

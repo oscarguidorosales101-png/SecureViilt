@@ -24,8 +24,11 @@ export const auditRepository = {
     }
   },
 
-  async listLogs({ skip = 0, take = 50, eventType = null } = {}) {
-    const where = eventType ? { eventType } : {};
+  async listLogs({ skip = 0, take = 50, eventType = null, status = null } = {}) {
+    const where = {};
+    if (eventType) where.eventType = eventType;
+    if (status) where.status = status;
+
     return prisma.securityLog.findMany({
       where,
       skip,
