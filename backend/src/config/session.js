@@ -14,7 +14,7 @@ export const sessionMiddleware = session({
     tableName: 'sessions',
     createTableIfMissing: false, // Ya creada formalmente con la migración de Prisma
   }),
-  secret: process.env.SESSION_SECRET || 'fallback_development_session_secret_at_least_64_characters_long_entropy',
+  secret: process.env.SESSION_SECRET || 'e9f1a8c3d7b4e2f5a0c6d8b9e1f3a5c7d2e4f6a8b0c2d4e6f8a1b3c5d7e9f1a3',
   name: 'connect.sid',
   resave: false,
   saveUninitialized: false,

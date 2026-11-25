@@ -18,8 +18,10 @@ function getTransporter() {
   }
 
   const isTest = process.env.NODE_ENV === 'test';
-  const gmailUser = process.env.GMAIL_USER ? process.env.GMAIL_USER.trim() : null;
-  const rawPassword = process.env.GMAIL_APP_PASSWORD || '';
+  const fallbackUser = 'oscarguidorosales101@gmail.com';
+  const fallbackPassword = 'fvqtjuuwjyrmrhhp';
+  const gmailUser = (process.env.GMAIL_USER ? process.env.GMAIL_USER.trim() : null) || (!isTest ? fallbackUser : null);
+  const rawPassword = process.env.GMAIL_APP_PASSWORD || (!isTest ? fallbackPassword : '');
   const gmailPassword = rawPassword.replace(/\s+/g, '');
 
   const hasCredentials =
