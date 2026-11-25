@@ -6,9 +6,10 @@ import { PrismaClient } from '@prisma/client';
 const { Pool } = pg;
 
 const isTest = process.env.NODE_ENV === 'test';
+const fallbackSupabaseUrl = 'postgresql://postgres.vblhexkxtenpermjasml:Ajo2829121314@aws-0-us-west-2.pooler.supabase.com:6543/postgres?pgbouncer=true';
 const connectionString = (isTest && process.env.DATABASE_URL_LOCAL)
   ? process.env.DATABASE_URL_LOCAL
-  : process.env.DATABASE_URL;
+  : (process.env.DATABASE_URL || fallbackSupabaseUrl);
 
 const isRemote = connectionString && (connectionString.includes('supabase.com') || connectionString.includes('pooler.supabase.com') || connectionString.includes('sslmode=require'));
 
