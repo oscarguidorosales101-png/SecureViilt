@@ -18,10 +18,11 @@ export const sessionMiddleware = session({
   name: 'connect.sid',
   resave: false,
   saveUninitialized: false,
+  proxy: true, // Confiar en proxies inversos (Render / Vercel)
   cookie: {
     httpOnly: true, // Inaccesible desde JavaScript de cliente (mitiga XSS)
     secure: process.env.NODE_ENV === 'production', // Solo HTTPS en producción
-    sameSite: 'lax', // Mitigación contra Cross-Site Request Forgery (CSRF)
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Permite cookies cross-origin en producción (Render <-> Vercel)
     maxAge: Number(process.env.SESSION_MAX_AGE_MS) || 24 * 60 * 60 * 1000, // 24 horas
   },
 });

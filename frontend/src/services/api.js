@@ -4,8 +4,15 @@
 
 import axios from 'axios';
 
+// Sanitización de baseURL: Si la variable de entorno no tiene /api o tiene barras al final, se normaliza
+const rawBaseURL = import.meta.env.VITE_API_URL || '/api';
+const cleanBaseURL = rawBaseURL.replace(/\/+$/, '');
+const normalizedBaseURL = (cleanBaseURL.startsWith('http') && !cleanBaseURL.endsWith('/api'))
+  ? `${cleanBaseURL}/api`
+  : cleanBaseURL;
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL: normalizedBaseURL,
   withCredentials: true, // Envía cookies de sesión HTTP-only automáticamente
   headers: {
     'Content-Type': 'application/json',

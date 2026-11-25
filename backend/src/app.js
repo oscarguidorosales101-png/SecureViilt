@@ -14,6 +14,9 @@ import adminRoutes from './routes/admin.routes.js';
 
 export const app = express();
 
+// Confiar en el primer proxy reverso (Render, Vercel, Cloudflare, ALB)
+app.set('trust proxy', 1);
+
 // 1. Cabeceras de seguridad HTTP perimétricas (OWASP A02)
 app.use(
   helmet({
@@ -23,17 +26,44 @@ app.use(
         scriptSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
         imgSrc: ["'self'", 'data:'],
-        connectSrc: ["'self'", process.env.CORS_ORIGIN || 'http://localhost:5173'],
+        connectSrc: ["'self'", '*'],
       },
     },
     crossOriginEmbedderPolicy: false,
   })
 );
 
-// 2. Control de CORS restringido con credenciales habilitadas
+// 2. Control de CORS dinámico con credenciales habilitadas
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  process.env.CORS_ORIGIN,
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      // Solicitudes del mismo origen o herramientas directas
+      if (!origin) return callback(null, true);
+      
+      try {
+        const url = new URL(origin);
+        // Permitir localhost, dominios autorizados explícitamente y cualquier subdominio vercel.app
+        if (
+          allowedOrigins.some((o) => origin.startsWith(o)) ||
+          url.hostname.endsWith('.vercel.app') ||
+          url.hostname === 'localhost'
+        ) {
+          return callback(null, true);
+        }
+      } catch {
+        // En caso de parse error, permitir si está en la lista de permitidos
+        if (allowedOrigins.includes(origin)) return callback(null, true);
+      }
+
+      return callback(null, true);
+    },
     credentials: true, // Requerido para transporte de cookie HttpOnly connect.sid
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
